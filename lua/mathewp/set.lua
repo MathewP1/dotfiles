@@ -10,7 +10,20 @@ vim.opt.smartindent = true
 
 vim.opt.swapfile = false
 vim.opt.backup = false
-vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+local undodir = os.getenv("USERPROFILE") .. "\\.vim\\undodir"
+
+-- Create the undodir if it doesn't exist
+local function create_dir_if_not_exists(dir)
+    local ok, err, code = os.rename(dir, dir)
+    if not ok and code == 13 then -- if the directory does not exist
+        os.execute('mkdir "' .. dir .. '"')
+    end
+end
+
+create_dir_if_not_exists(undodir)
+
+vim.opt.undodir = undodir
+vim.opt.undofile = true -- Enable persistent undo
 vim.opt.undofile = true
 
 vim.opt.incsearch = true
